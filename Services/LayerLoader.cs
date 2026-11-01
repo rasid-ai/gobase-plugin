@@ -37,11 +37,7 @@ namespace GoBase.Services
 
 			await QueuedTask.Run(() =>
 			{
-				var map = mapView.Map;
-				var root = map.GetLayersAsFlattenedList()
-					.OfType<GroupLayer>()
-					.FirstOrDefault(layer => layer.Name == RootGroupName)
-					?? LayerFactory.Instance.CreateGroupLayer(map, 0, RootGroupName);
+				var root = RootGroup(mapView.Map);
 
 				var container = featureClasses.Count > 1
 					? LayerFactory.Instance.CreateGroupLayer(root, 0, assetName)
@@ -56,6 +52,48 @@ namespace GoBase.Services
 				}
 			});
 		}
+
+		// Adds a raster to the active map, under the "GoBase" group. datasetPath points into a cloud
+		// storage connection, so Pro reads the file where it is, fetching only what is on screen.
+		public static async Task AddRasterAsync(string datasetPath, string layerName)
+		{
+			var mapView = MapView.Active;
+			if (mapView?.Map == null)
+			{
+				throw new System.InvalidOperationException(
+					"Open a map in ArcGIS Pro before loading this layer.");
+			}
+
+			await QueuedTask.Run(() =>
+			{
+				// A COG carries its own overviews, and building pyramids or statistics would read the
+				// whole file over the network, or ask first. Both options are Pro-wide, so they are
+				// put back as they were.
+				var options = ApplicationOptions.RasterImageryOptions;
+				var pyramids = options.GetPyramidOption();
+				var statistics = options.GetStatisticsOption();
+				try
+				{
+					options.SetPyramidOption(BuildPyramidOption.NeverBuild);
+					options.SetStatisticsOption(CalculateStatisticOption.NeverCalculate);
+
+					var parameters = new RasterLayerCreationParams(new System.Uri(datasetPath)) { Name = layerName };
+					LayerFactory.Instance.CreateLayer<RasterLayer>(parameters, RootGroup(mapView.Map));
+				}
+				finally
+				{
+					options.SetPyramidOption(pyramids);
+					options.SetStatisticsOption(statistics);
+				}
+			});
+		}
+
+		// The "GoBase" group at the top of the map, created the first time. Runs on the MCT.
+		private static GroupLayer RootGroup(Map map) =>
+			map.GetLayersAsFlattenedList()
+				.OfType<GroupLayer>()
+				.FirstOrDefault(layer => layer.Name == RootGroupName)
+			?? LayerFactory.Instance.CreateGroupLayer(map, 0, RootGroupName);
 
 		private static async Task<string> ConvertGeoJsonAsync(GeoJsonPart part)
 		{

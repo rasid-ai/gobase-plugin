@@ -155,6 +155,9 @@ namespace GoBase.Services
 	{
 		public HttpStatusCode StatusCode { get; }
 
+		// The server's own explanation: its "detail" field, or the status text.
+		public string Detail { get; }
+
 		public bool IsAuthFailure =>
 			StatusCode == HttpStatusCode.Unauthorized || StatusCode == HttpStatusCode.Forbidden;
 
@@ -162,6 +165,7 @@ namespace GoBase.Services
 			: base($"HTTP {(int)statusCode}: {detail}")
 		{
 			StatusCode = statusCode;
+			Detail = detail;
 		}
 	}
 }

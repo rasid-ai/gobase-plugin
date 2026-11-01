@@ -53,6 +53,11 @@ namespace GoBase.Services
 			return _api.GetAsync<FeaturePage>(path, FeaturePageTimeout);
 		}
 
+		// Where a raster is in the lake, and credentials that read it for a while (an hour by default).
+		// Each call issues a new set. 503 when the server does not serve rasters or cannot reach the lake.
+		public Task<RasterAccess> GetRasterAccessAsync(string assetId) =>
+			_api.GetAsync<RasterAccess>($"/api/map/assets/{Uri.EscapeDataString(assetId)}/raster-access");
+
 		// The whole PDF behind a document, saved into destinationFolder. Returns the file's path.
 		public Task<string> DownloadDocumentPdfAsync(string assetId, string destinationFolder, string fallbackFileName) =>
 			_api.DownloadAsync(

@@ -17,7 +17,7 @@ git history for when chat comes back.
 | Catalog list: search, type filter, map-view filter, paging | built |
 | Vectors: add to map | built: reads `/api/map/assets/{id}/data` for the map view, at most 6 pages of 10,000 features |
 | Zoom to an asset | built |
-| Rasters (COG) | not yet: waits on the backend's `raster-access` endpoint |
+| Rasters (COG): add to map | built: Pro reads the COG straight from the lake with temporary credentials from `/api/map/assets/{id}/raster-access`, renewed while the layer is open; needs GoBase-Web ADR-022 (branch feat/raster-access) |
 | Documents (PDF) | built: downloads `/api/catalog/assets/{id}/pdf` whole and opens it in the default PDF viewer; offered only when the catalog records a PDF |
 
 ## How it fits together
@@ -38,6 +38,9 @@ Services/                            everything that talks to the server or the 
   AuthService.cs      trades username + password for a key; keeps server URL + key
                       in Windows Credential Manager, never the password
   VectorLoader.cs     pages through /data, splits by geometry type
+  RasterLoader.cs     raster-access -> a cloud storage connection -> a raster layer
+  CloudRasterConnection.cs  writes one .acs per set of credentials
+  RasterCredentialRefresher.cs  renews the credentials before they run out
   DocumentOpener.cs   downloads a document's PDF, opens it in the default viewer
   LayerLoader.cs      GeoJSON -> feature class (JSONToFeatures) -> map layer
   MapExtent.cs        the map view as a lon/lat box; zoom to a box
@@ -55,6 +58,17 @@ Two things that differ from QGIS plugins:
 
 Loaded vectors are copies: each one becomes a feature class in the project's
 default geodatabase, inside a **GoBase** group layer.
+
+Rasters are not copied. Pro cannot open a COG from a web address, so the
+add-in asks GoBase for temporary credentials that read that one file, writes
+them into a *cloud storage connection file* (`.acs`, Pro's equivalent of a
+QGIS `/vsis3/` path plus its keys) and adds the raster from it. Pro then
+reads only the parts on screen. The credentials last an hour; ten minutes
+before they run out the add-in gets new ones and points the layer at a new
+`.acs`. The files live in `%LOCALAPPDATA%\GoBase\connections` and are
+deleted once expired. Pyramids and statistics are not built on add: a COG
+has its own overviews. Right-click the layer → Calculate Statistics if a
+stretch looks wrong.
 
 ## Build
 
@@ -81,6 +95,9 @@ installed to compile.
 3. Catalog → pick a vector → **Zoom to** → **Add to map**.
 4. Catalog → type filter **Documents** → **Open PDF**. The file is saved under
    `%TEMP%\gobase_downloads\<asset id>\`.
+5. Catalog → type filter **Rasters** → **Add to map**. Until the lake has a
+   public address, this computer must be on the tailnet. The row says so if
+   the lake cannot be reached.
 
 The add-in calls the server over HTTPS. The host must be in the backend's
 `DJANGO_ALLOWED_HOSTS`.

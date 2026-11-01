@@ -13,6 +13,20 @@ namespace GoBase
 		public static Module1 Current => _this ??= (Module1)FrameworkApplication.FindModule("GoBase_Module");
 
 		#region Overrides
+		// Pro loads the module at start-up (autoLoad in Config.daml), so raster layers in a reopened
+		// project get new credentials without the GoBase panel being opened.
+		protected override bool Initialize()
+		{
+			Services.RasterCredentialRefresher.Start();
+			return base.Initialize();
+		}
+
+		protected override void Uninitialize()
+		{
+			Services.RasterCredentialRefresher.Stop();
+			base.Uninitialize();
+		}
+
 		/// <summary>
 		/// Called by Framework when ArcGIS Pro is closing
 		/// </summary>

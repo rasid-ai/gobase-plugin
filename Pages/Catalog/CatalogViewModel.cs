@@ -197,15 +197,14 @@ namespace GoBase.Pages.Catalog
             _ => "•"
         };
 
-        // Vectors go to the map and documents open as PDFs. Rasters wait on the backend's
-        // raster-access endpoint. A document whose PDF the catalog does not record gets no
-        // working button rather than one that fails.
-        public bool CanAct => Asset.IsVector || Asset.HasPdf;
+        // Vectors and rasters go to the map and documents open as PDFs. A document whose PDF the
+        // catalog does not record gets no working button rather than one that fails.
+        public bool CanAct => Asset.IsVector || Asset.IsRaster || Asset.HasPdf;
         public string ActionText => Asset.DataType switch
         {
-            "vector" => "Add to map",
+            "vector" or "raster" => "Add to map",
             "document" => Asset.HasPdf ? "Open PDF" : "No PDF",
-            _ => "Coming soon"
+            _ => "Not supported"
         };
         public bool CanZoom => Asset.Bbox is { Length: 4 };
 
@@ -236,7 +235,12 @@ namespace GoBase.Pages.Catalog
         {
             Asset = asset;
             _api = api;
-            ActionCommand = new RelayCommand(async () => await (Asset.IsDocument ? OpenPdfAsync() : AddToMapAsync()));
+            ActionCommand = new RelayCommand(async () => await (Asset.DataType switch
+            {
+                "document" => OpenPdfAsync(),
+                "raster" => AddRasterAsync(),
+                _ => AddToMapAsync()
+            }));
             ZoomCommand = new RelayCommand(async () => await ZoomAsync());
         }
 
@@ -323,6 +327,47 @@ namespace GoBase.Pages.Catalog
             catch (Exception ex)
             {
                 RowStatus = $"Could not add the layer: {ex.Message}";
+            }
+            finally
+            {
+                IsWorking = false;
+            }
+        }
+
+        private async Task AddRasterAsync()
+        {
+            if (!IsActionEnabled)
+                return;
+
+            if (!MapExtent.HasActiveMap)
+            {
+                RowStatus = "Open a map in ArcGIS Pro first.";
+                return;
+            }
+
+            IsWorking = true;
+            try
+            {
+                var progress = new Progress<string>(message => RowStatus = message);
+                await RasterLoader.LoadAsync(_api, Asset, progress);
+                RowStatus = "Added. ArcGIS Pro reads it from the lake, only the parts on screen.";
+            }
+            catch (ApiException ex) when (ex.IsAuthFailure)
+            {
+                RowStatus = "The server refused the API key.";
+            }
+            catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                RowStatus = "The server has no such raster. Search again: it may have been replaced.";
+            }
+            catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                // Either the server is not set up to share rasters, or it cannot reach the lake.
+                RowStatus = $"The server cannot share this raster now. {ex.Detail}";
+            }
+            catch (Exception ex)
+            {
+                RowStatus = $"Could not add the raster: {ex.Message}";
             }
             finally
             {
