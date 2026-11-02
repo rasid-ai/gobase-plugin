@@ -76,7 +76,8 @@ Targets ArcGIS Pro **3.7** (.NET 10). References come from Esri's NuGet
 package `Esri.ArcGISPro.Extensions30`, so ArcGIS Pro does not have to be
 installed to compile.
 
-- **Command line, Windows or Linux:** the .NET 10 SDK, then `dotnet build`.
+- **Command line, Windows or Linux:** the .NET 10 SDK, then `dotnet build GoBase.csproj`
+  (the folder also holds `GoBase.slnx`, so name one).
   It writes `bin/Debug/net10.0-windows/GoBase.esriAddinX`; double-click that
   file on a machine with Pro 3.7 to install the add-in. Esri's own packaging
   step needs Visual Studio's MSBuild, so under `dotnet build` a plain
