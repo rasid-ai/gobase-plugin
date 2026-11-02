@@ -326,6 +326,8 @@ namespace GoBase.Pages.Catalog
             }
             catch (Exception ex)
             {
+                // The row has room for the message only; DebugView shows where it came from.
+                System.Diagnostics.Debug.WriteLine($"GoBase: adding vector {Asset.AssetId} failed: {ex}");
                 RowStatus = $"Could not add the layer: {ex.Message}";
             }
             finally
@@ -367,6 +369,7 @@ namespace GoBase.Pages.Catalog
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"GoBase: adding raster {Asset.AssetId} failed: {ex}");
                 RowStatus = $"Could not add the raster: {ex.Message}";
             }
             finally
