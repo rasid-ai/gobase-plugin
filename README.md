@@ -76,14 +76,17 @@ Targets ArcGIS Pro **3.7** (.NET 10). References come from Esri's NuGet
 package `Esri.ArcGISPro.Extensions30`, so ArcGIS Pro does not have to be
 installed to compile.
 
-- **Windows (to run it):** Visual Studio 2026 with the ArcGIS Pro SDK
-  extension. Open `GoBase.slnx`, build, then start: Pro launches with the
-  add-in loaded (`Properties/launchSettings.json`). The build also writes
-  `GoBase.esriAddinX`, which installs on any machine by double-clicking it.
-- **Linux (compile check only):** `dotnet build` with the .NET 10 SDK.
-  `EnableWindowsTargeting` lets it compile the WPF project. Esri's packaging
-  step does not run under `dotnet build`, so no `.esriAddinX` is produced.
-  Nothing can be run here.
+- **Command line, Windows or Linux:** the .NET 10 SDK, then `dotnet build`.
+  It writes `bin/Debug/net10.0-windows/GoBase.esriAddinX`; double-click that
+  file on a machine with Pro 3.7 to install the add-in. Esri's own packaging
+  step needs Visual Studio's MSBuild, so under `dotnet build` a plain
+  replacement builds the same file (`Build/DotnetCliPackaging.targets`). On
+  Linux, `EnableWindowsTargeting` lets it compile the WPF project; nothing
+  can run there.
+- **Visual Studio 2026**, to debug (workload ".NET desktop development").
+  Open `GoBase.slnx` and start: the build installs the add-in and Pro
+  launches with it loaded (`Properties/launchSettings.json`). The ArcGIS Pro
+  SDK extension adds project templates; this project does not need it.
 
 ## Test against the server
 
