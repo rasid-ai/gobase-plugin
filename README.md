@@ -105,3 +105,16 @@ installed to compile.
 
 The add-in calls the server over HTTPS. The host must be in the backend's
 `DJANGO_ALLOWED_HOSTS`.
+
+## When the GoBase button does nothing
+
+- **Pro says the add-in is blocked because its source is not trusted.** The
+  add-in is not signed. Project → Add-In Manager → Options → **Load all
+  add-ins without restrictions**, then restart Pro.
+- **The panel never opens, and Pro's log (Ctrl+Alt+M) says
+  `Type not found: GoBase.Module1`.** Pro found the add-in but could not
+  load `GoBase.dll`. On Windows 11 the usual cause is Smart App Control,
+  which blocks unsigned DLLs, including ones built on the same machine;
+  Windows shows a notification the first time. Turn it off under Windows
+  Security → App & browser control → Smart App Control, or sign the DLL
+  with a certificate from a public certificate authority.
