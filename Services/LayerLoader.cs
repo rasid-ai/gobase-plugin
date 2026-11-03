@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GoBase.Services
@@ -117,16 +118,19 @@ namespace GoBase.Services
 
 			// The third parameter tells JSONToFeatures which geometry type to keep from the GeoJSON.
 			var parameters = Geoprocessing.MakeValueArray(part.Path, outputPath, part.GeometryType);
+			// The CancellationToken overload: the CancelableProgressor one dereferences the progressor,
+			// so passing null there throws a NullReferenceException inside Pro.
 			var result = await Geoprocessing.ExecuteToolAsync(
 				"conversion.JSONToFeatures",
 				parameters,
 				null,
+				CancellationToken.None,
 				null,
 				GPExecuteToolFlags.None);
 
-			if (result.IsFailed)
+			if (result == null || result.IsFailed)
 			{
-				var messages = string.Join("\n", result.ErrorMessages.Select(message => message.Text));
+				var messages = string.Join("\n", (result?.ErrorMessages ?? []).Select(message => message.Text));
 				throw new System.InvalidOperationException(
 					$"ArcGIS Pro could not convert the features ({part.GeometryType}).\n{messages}");
 			}

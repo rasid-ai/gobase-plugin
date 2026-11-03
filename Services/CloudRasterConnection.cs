@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using GoBase.Models;
@@ -63,14 +64,17 @@ namespace GoBase.Services
 				options);
 
 			// No flags: in particular not AddToHistory, which would keep the credentials in the project.
+			// The CancellationToken overload: the CancelableProgressor one dereferences the progressor,
+			// so passing null there throws a NullReferenceException inside Pro.
 			var result = await Geoprocessing.ExecuteToolAsync(
-				"management.CreateCloudStorageConnectionFile", parameters, null, null, GPExecuteToolFlags.None);
+				"management.CreateCloudStorageConnectionFile", parameters, null, CancellationToken.None, null,
+				GPExecuteToolFlags.None);
 
 			var path = Path.Combine(Folder, name);
-			if (result.IsFailed || !File.Exists(path))
+			if (result == null || result.IsFailed || !File.Exists(path))
 			{
 				// The tool only warns when it cannot reach the bucket, so a failure here is about the inputs.
-				var messages = string.Join("\n", result.ErrorMessages.Select(message => message.Text));
+				var messages = string.Join("\n", (result?.ErrorMessages ?? []).Select(message => message.Text));
 				throw new InvalidOperationException($"ArcGIS Pro could not create the lake connection.\n{messages}");
 			}
 
