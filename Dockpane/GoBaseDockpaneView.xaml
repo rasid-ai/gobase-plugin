@@ -31,11 +31,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel Background="{StaticResource RasidBackgroundBrush}">
+    <DockPanel Background="{StaticResource GoBaseBackgroundBrush}">
         <Border DockPanel.Dock="Left"
                 Width="132"
                 Background="White"
-                BorderBrush="{StaticResource RasidBorderBrush}"
+                BorderBrush="{StaticResource GoBaseBorderBrush}"
                 BorderThickness="0,0,1,0"
                 Visibility="{Binding IsNavigationVisible, Converter={StaticResource BoolToVis}}">
             <Grid>
@@ -47,27 +47,29 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Margin="10,12,10,4">
-                    <Image Source="/GoBase;component/Images/logo.png"
-                           Height="58"
-                           Stretch="Uniform"/>
+                    <TextBlock Text="GoBase"
+                               FontSize="22"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource GoBasePrimaryBrush}"
+                               HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding WelcomeText}"
                                Margin="0,7,0,0"
                                FontSize="10"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource RasidTextBrush}"
+                               Foreground="{StaticResource GoBaseTextBrush}"
                                TextAlignment="Center"
                                TextWrapping="Wrap"/>
                 </StackPanel>
 
-                <Separator Grid.Row="1" Margin="10,4" Background="{StaticResource RasidBorderBrush}"/>
+                <Separator Grid.Row="1" Margin="10,4" Background="{StaticResource GoBaseBorderBrush}"/>
 
                 <StackPanel Grid.Row="2" Margin="0,4,0,0">
                     <ToggleButton Content="▦  Catalog"
-                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  Style="{StaticResource GoBaseNavButtonStyle}"
                                   IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Catalog, Mode=OneWay}"
                                   Command="{Binding ShowCatalogCommand}"/>
                     <ToggleButton Content="ⓘ  About"
-                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  Style="{StaticResource GoBaseNavButtonStyle}"
                                   IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=About, Mode=OneWay}"
                                   Command="{Binding ShowAboutCommand}"/>
                 </StackPanel>
@@ -77,9 +79,9 @@
                         Command="{Binding LogOutCommand}"
                         Margin="12,8,12,12"
                         Padding="10,6"
-                        Foreground="{StaticResource RasidDangerBrush}"
+                        Foreground="{StaticResource GoBaseDangerBrush}"
                         BorderBrush="#DFA7A7"
-                        Style="{StaticResource RasidSecondaryButtonStyle}"/>
+                        Style="{StaticResource GoBaseSecondaryButtonStyle}"/>
             </Grid>
         </Border>
 

@@ -9,7 +9,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource RasidBackgroundBrush}" Margin="16,12">
+    <Grid Background="{StaticResource GoBaseBackgroundBrush}" Margin="16,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Catalog" Style="{StaticResource RasidPageTitleStyle}"/>
+        <TextBlock Text="Catalog" Style="{StaticResource GoBasePageTitleStyle}"/>
 
         <!-- Search box and type filter. Enter in the box searches. -->
         <Grid Grid.Row="1" Margin="0,10,0,6">
@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource RasidTextBoxStyle}"
+                     Style="{StaticResource GoBaseTextBoxStyle}"
                      ToolTip="Searches names, datasets, topics, formats and column names">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
@@ -44,7 +44,7 @@
             <Button Grid.Column="2"
                     Content="Search"
                     Command="{Binding SearchCommand}"
-                    Style="{StaticResource RasidPrimaryButtonStyle}"
+                    Style="{StaticResource GoBasePrimaryButtonStyle}"
                     Padding="14,6"
                     Margin="6,0,0,0"/>
         </Grid>
@@ -52,7 +52,7 @@
         <CheckBox Grid.Row="2"
                   Content="Only assets in the current map view"
                   IsChecked="{Binding OnlyInMapView}"
-                  Foreground="{StaticResource RasidMutedTextBrush}"
+                  Foreground="{StaticResource GoBaseMutedTextBrush}"
                   Margin="0,0,0,10"/>
 
         <Grid Grid.Row="3">
@@ -60,7 +60,7 @@
                 <ItemsControl ItemsSource="{Binding Assets}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource RasidCardBorderStyle}" Margin="0,0,0,8">
+                            <Border Style="{StaticResource GoBaseCardBorderStyle}" Margin="0,0,0,8">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -72,8 +72,8 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <Border Width="38" Height="38" CornerRadius="5" Background="{StaticResource RasidPrimarySoftBrush}">
-                                        <TextBlock Text="{Binding Glyph}" FontSize="17" Foreground="{StaticResource RasidPrimaryBrush}"
+                                    <Border Width="38" Height="38" CornerRadius="5" Background="{StaticResource GoBasePrimarySoftBrush}">
+                                        <TextBlock Text="{Binding Glyph}" FontSize="17" Foreground="{StaticResource GoBasePrimaryBrush}"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
 
@@ -83,11 +83,11 @@
                                                    FontWeight="SemiBold"
                                                    TextTrimming="CharacterEllipsis"
                                                    ToolTip="{Binding Name}"
-                                                   Foreground="{StaticResource RasidTextBrush}"/>
+                                                   Foreground="{StaticResource GoBaseTextBrush}"/>
                                         <TextBlock Text="{Binding Subtitle}"
                                                    FontSize="10"
                                                    TextTrimming="CharacterEllipsis"
-                                                   Foreground="{StaticResource RasidMutedTextBrush}"
+                                                   Foreground="{StaticResource GoBaseMutedTextBrush}"
                                                    Margin="0,3,0,0"/>
                                     </StackPanel>
 
@@ -95,13 +95,13 @@
                                         <Button Content="Zoom to"
                                                 Command="{Binding ZoomCommand}"
                                                 IsEnabled="{Binding CanZoom}"
-                                                Style="{StaticResource RasidSecondaryButtonStyle}"
+                                                Style="{StaticResource GoBaseSecondaryButtonStyle}"
                                                 Padding="10,6"
                                                 Margin="0,0,6,0"/>
                                         <Button Content="{Binding ActionText}"
                                                 Command="{Binding ActionCommand}"
                                                 IsEnabled="{Binding IsActionEnabled}"
-                                                Style="{StaticResource RasidPrimaryButtonStyle}"
+                                                Style="{StaticResource GoBasePrimaryButtonStyle}"
                                                 Padding="12,6"/>
                                     </StackPanel>
 
@@ -109,7 +109,7 @@
                                                Text="{Binding RowStatus}"
                                                FontSize="10.5"
                                                TextWrapping="Wrap"
-                                               Foreground="{StaticResource RasidMutedTextBrush}"
+                                               Foreground="{StaticResource GoBaseMutedTextBrush}"
                                                Margin="12,6,0,0"
                                                Visibility="{Binding RowStatus, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </Grid>
@@ -124,7 +124,7 @@
                        VerticalAlignment="Center"
                        TextWrapping="Wrap"
                        TextAlignment="Center"
-                       Foreground="{StaticResource RasidMutedTextBrush}"
+                       Foreground="{StaticResource GoBaseMutedTextBrush}"
                        Visibility="{Binding StatusText, Converter={StaticResource StringToVisibilityConverter}}"/>
         </Grid>
 
@@ -138,19 +138,19 @@
             <TextBlock Text="{Binding PageText}"
                        VerticalAlignment="Center"
                        FontSize="11"
-                       Foreground="{StaticResource RasidMutedTextBrush}"/>
+                       Foreground="{StaticResource GoBaseMutedTextBrush}"/>
             <Button Grid.Column="1"
                     Content="Previous"
                     Command="{Binding PreviousPageCommand}"
                     IsEnabled="{Binding CanGoPrevious}"
-                    Style="{StaticResource RasidSecondaryButtonStyle}"
+                    Style="{StaticResource GoBaseSecondaryButtonStyle}"
                     Padding="12,5"
                     Margin="0,0,6,0"/>
             <Button Grid.Column="2"
                     Content="Next"
                     Command="{Binding NextPageCommand}"
                     IsEnabled="{Binding CanGoNext}"
-                    Style="{StaticResource RasidSecondaryButtonStyle}"
+                    Style="{StaticResource GoBaseSecondaryButtonStyle}"
                     Padding="12,5"/>
         </Grid>
     </Grid>

@@ -17,13 +17,11 @@
 
         <Border Grid.Column="0" Background="#173C40">
             <StackPanel VerticalAlignment="Center" Margin="30">
-                <Image Source="/GoBase;component/Images/icon_nobg.png" Height="90" Stretch="Uniform"/>
                 <TextBlock Text="GoBase"
                            FontSize="25"
                            FontWeight="SemiBold"
                            Foreground="White"
-                           HorizontalAlignment="Center"
-                           Margin="0,18,0,0"/>
+                           HorizontalAlignment="Center"/>
                 <TextBlock Text="Browse the geospatial catalog and load its layers directly inside ArcGIS Pro."
                            Foreground="#DCEBEC"
                            TextWrapping="Wrap"
@@ -33,23 +31,23 @@
         </Border>
 
         <StackPanel Grid.Column="1" Margin="48,36" VerticalAlignment="Center" MaxWidth="420">
-            <TextBlock Text="Connect to GoBase" Style="{StaticResource RasidPageTitleStyle}"/>
+            <TextBlock Text="Connect to GoBase" Style="{StaticResource GoBasePageTitleStyle}"/>
             <TextBlock Text="Sign in with your Geo Portal username and password."
                        Margin="0,4,0,20"
-                       Foreground="{StaticResource RasidMutedTextBrush}"/>
+                       Foreground="{StaticResource GoBaseMutedTextBrush}"/>
 
-            <TextBlock Text="Server" Style="{StaticResource RasidSectionTitleStyle}"/>
+            <TextBlock Text="Server" Style="{StaticResource GoBaseSectionTitleStyle}"/>
             <TextBox Text="{Binding ServerUrl, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource RasidTextBoxStyle}"
+                     Style="{StaticResource GoBaseTextBoxStyle}"
                      ToolTip="For example https://portal.example"
                      Margin="0,5,0,12"/>
 
-            <TextBlock Text="Username" Style="{StaticResource RasidSectionTitleStyle}"/>
+            <TextBlock Text="Username" Style="{StaticResource GoBaseSectionTitleStyle}"/>
             <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource RasidTextBoxStyle}"
+                     Style="{StaticResource GoBaseTextBoxStyle}"
                      Margin="0,5,0,12"/>
 
-            <TextBlock Text="Password" Style="{StaticResource RasidSectionTitleStyle}"/>
+            <TextBlock Text="Password" Style="{StaticResource GoBaseSectionTitleStyle}"/>
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -57,7 +55,7 @@
                 </Grid.ColumnDefinitions>
                 <PasswordBox x:Name="PasswordInput"
                              Grid.Column="0"
-                             Style="{StaticResource RasidPasswordBoxStyle}"
+                             Style="{StaticResource GoBasePasswordBoxStyle}"
                              PasswordChanged="PasswordInput_OnPasswordChanged"
                              Visibility="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <PasswordBox.InputBindings>
@@ -66,23 +64,23 @@
                 </PasswordBox>
                 <TextBox Grid.Column="0"
                          Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource RasidTextBoxStyle}"
+                         Style="{StaticResource GoBaseTextBoxStyle}"
                          Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVis}}"/>
                 <Button Grid.Column="1"
                         Content="👁"
                         Width="42"
                         Margin="5,0,0,0"
                         Command="{Binding ToggleVisibilityCommand}"
-                        Style="{StaticResource RasidSecondaryButtonStyle}"/>
+                        Style="{StaticResource GoBaseSecondaryButtonStyle}"/>
             </Grid>
 
             <Button Content="Connect"
                     Command="{Binding ConnectCommand}"
                     Margin="0,16,0,0"
-                    Style="{StaticResource RasidPrimaryButtonStyle}"/>
+                    Style="{StaticResource GoBasePrimaryButtonStyle}"/>
 
             <TextBlock Text="{Binding ErrorText}"
-                       Foreground="{StaticResource RasidDangerBrush}"
+                       Foreground="{StaticResource GoBaseDangerBrush}"
                        Margin="0,10,0,0"
                        TextWrapping="Wrap"
                        Visibility="{Binding ErrorText, Converter={StaticResource StringToVisibilityConverter}}"/>
@@ -91,7 +89,7 @@
                        Margin="0,18,0,0"
                        HorizontalAlignment="Center"
                        TextWrapping="Wrap"
-                       Foreground="{StaticResource RasidMutedTextBrush}"/>
+                       Foreground="{StaticResource GoBaseMutedTextBrush}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -7,38 +7,38 @@
     <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
     <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
-    <SolidColorBrush x:Key="RasidPrimaryBrush" Color="#008D78"/>
-    <SolidColorBrush x:Key="RasidPrimaryHoverBrush" Color="#007765"/>
-    <SolidColorBrush x:Key="RasidPrimarySoftBrush" Color="#E8F6F3"/>
-    <SolidColorBrush x:Key="RasidTextBrush" Color="#263238"/>
-    <SolidColorBrush x:Key="RasidMutedTextBrush" Color="#66737C"/>
-    <SolidColorBrush x:Key="RasidBorderBrush" Color="#D8E0E4"/>
-    <SolidColorBrush x:Key="RasidSurfaceBrush" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="RasidBackgroundBrush" Color="#F5F7F8"/>
-    <SolidColorBrush x:Key="RasidDangerBrush" Color="#C65353"/>
+    <SolidColorBrush x:Key="GoBasePrimaryBrush" Color="#008D78"/>
+    <SolidColorBrush x:Key="GoBasePrimaryHoverBrush" Color="#007765"/>
+    <SolidColorBrush x:Key="GoBasePrimarySoftBrush" Color="#E8F6F3"/>
+    <SolidColorBrush x:Key="GoBaseTextBrush" Color="#263238"/>
+    <SolidColorBrush x:Key="GoBaseMutedTextBrush" Color="#66737C"/>
+    <SolidColorBrush x:Key="GoBaseBorderBrush" Color="#D8E0E4"/>
+    <SolidColorBrush x:Key="GoBaseSurfaceBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="GoBaseBackgroundBrush" Color="#F5F7F8"/>
+    <SolidColorBrush x:Key="GoBaseDangerBrush" Color="#C65353"/>
 
-    <Style x:Key="RasidPageTitleStyle" TargetType="TextBlock">
+    <Style x:Key="GoBasePageTitleStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
     </Style>
 
-    <Style x:Key="RasidSectionTitleStyle" TargetType="TextBlock">
+    <Style x:Key="GoBaseSectionTitleStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
     </Style>
 
-    <Style x:Key="RasidTextBoxStyle" TargetType="TextBox">
+    <Style x:Key="GoBaseTextBoxStyle" TargetType="TextBox">
         <Setter Property="Padding" Value="10,7"/>
         <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GoBaseBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Style.Triggers>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GoBasePrimaryBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Opacity" Value="0.55"/>
@@ -46,22 +46,22 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="RasidPasswordBoxStyle" TargetType="PasswordBox">
+    <Style x:Key="GoBasePasswordBoxStyle" TargetType="PasswordBox">
         <Setter Property="Padding" Value="10,7"/>
         <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GoBaseBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Style.Triggers>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GoBasePrimaryBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="RasidPrimaryButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource RasidPrimaryBrush}"/>
+    <Style x:Key="GoBasePrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource GoBasePrimaryBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="14,8"/>
@@ -82,7 +82,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource RasidPrimaryHoverBrush}"/>
+                            <Setter TargetName="Root" Property="Background" Value="{StaticResource GoBasePrimaryHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Root" Property="Opacity" Value="0.82"/>
@@ -96,10 +96,10 @@
         </Setter>
     </Style>
 
-    <Style x:Key="RasidSecondaryButtonStyle" TargetType="Button">
+    <Style x:Key="GoBaseSecondaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GoBaseBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="12,7"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -116,8 +116,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource RasidPrimarySoftBrush}"/>
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                            <Setter TargetName="Root" Property="Background" Value="{StaticResource GoBasePrimarySoftBrush}"/>
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource GoBasePrimaryBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Root" Property="Opacity" Value="0.8"/>
@@ -131,19 +131,19 @@
         </Setter>
     </Style>
 
-    <Style x:Key="RasidIconButtonStyle" TargetType="Button" BasedOn="{StaticResource RasidSecondaryButtonStyle}">
+    <Style x:Key="GoBaseIconButtonStyle" TargetType="Button" BasedOn="{StaticResource GoBaseSecondaryButtonStyle}">
         <Setter Property="Width" Value="38"/>
         <Setter Property="Height" Value="38"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="FontSize" Value="15"/>
     </Style>
 
-    <Style x:Key="RasidNavButtonStyle" TargetType="ToggleButton">
+    <Style x:Key="GoBaseNavButtonStyle" TargetType="ToggleButton">
         <Setter Property="Height" Value="34"/>
         <Setter Property="Margin" Value="8,2"/>
         <Setter Property="Padding" Value="10,0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="12"/>
@@ -163,7 +163,7 @@
                             <Setter TargetName="Root" Property="Background" Value="#EEF3F4"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource RasidPrimaryBrush}"/>
+                            <Setter TargetName="Root" Property="Background" Value="{StaticResource GoBasePrimaryBrush}"/>
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
                         </Trigger>
@@ -174,12 +174,12 @@
     </Style>
 
 
-    <Style x:Key="RasidNavActionButtonStyle" TargetType="Button">
+    <Style x:Key="GoBaseNavActionButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="34"/>
         <Setter Property="Margin" Value="8,2"/>
         <Setter Property="Padding" Value="10,0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource GoBaseTextBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="12"/>
@@ -207,9 +207,9 @@
         </Setter>
     </Style>
 
-    <Style x:Key="RasidCardBorderStyle" TargetType="Border">
+    <Style x:Key="GoBaseCardBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GoBaseBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="14"/>

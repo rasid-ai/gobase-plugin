@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArcGIS defaultAssembly="GoBase.dll" defaultNamespace="GoBase" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <!-- The id must differ from the RASID add-in's, or Pro treats the two as one add-in and loads only the newer. -->
+  <!-- The id must differ from the add-in this was forked from, or Pro treats the two as one add-in and loads only the newer. -->
   <AddInInfo id="{766A0759-A7BD-4273-B71C-EA32D84CD761}" version="0.1" desktopVersion="3.7.0">
 	<Name>GoBase</Name>
 	<Description>Browse the GoBase catalog and load its layers into ArcGIS Pro</Description>
 	<Image>Images\AddInDesktop32.png</Image>
-	<Author>RASID Team</Author>
-	<Company>RASID</Company>
+	<Author>GoBase</Author>
+	<Company>GoBase</Company>
 	<Date>10/26/2026</Date>
 	<Subject>Framework</Subject>
   </AddInInfo>
@@ -26,8 +26,8 @@
 		<button id="GoBase_ShowDockpane_Button" caption="GoBase"
 				className="GoBase.RibbonButton.ShowGoBaseDockpaneButton"
 				loadOnClick="true"
-				smallImage="Images\logo.png"
-				largeImage="Images\logo.png">
+				smallImage="Images\AddInDesktop16.png"
+				largeImage="Images\AddInDesktop32.png">
 		  <tooltip heading="GoBase">
 			Open the GoBase panel<disabledText/>
 		  </tooltip>

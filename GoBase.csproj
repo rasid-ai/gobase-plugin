@@ -25,14 +25,6 @@
     <None Include="Properties\launchSettings.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Images\logo.png" />
-    <None Remove="Images\icon.png" />
-    <None Remove="Images\icon_nobg.png" />
-    <Resource Include="Images\logo.png" />
-    <Resource Include="Images\icon.png" />
-    <Resource Include="Images\icon_nobg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <!-- Esri's reference assemblies and build targets: the add-in builds without ArcGIS Pro installed.
          The version must match the Pro release in Config.daml (desktopVersion). -->
     <PackageReference Include="Esri.ArcGISPro.Extensions30" Version="3.7.0.1901" />

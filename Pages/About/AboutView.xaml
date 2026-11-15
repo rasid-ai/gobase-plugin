@@ -9,41 +9,39 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource RasidBackgroundBrush}">
-        <Border Style="{StaticResource RasidCardBorderStyle}"
+    <Grid Background="{StaticResource GoBaseBackgroundBrush}">
+        <Border Style="{StaticResource GoBaseCardBorderStyle}"
                 Width="430"
                 Padding="28"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             <StackPanel>
-                <Image Source="/GoBase;component/Images/logo.png" Height="92" Stretch="Uniform"/>
                 <TextBlock Text="GoBase for ArcGIS Pro"
                            FontSize="20"
                            FontWeight="SemiBold"
-                           Foreground="{StaticResource RasidTextBrush}"
-                           HorizontalAlignment="Center"
-                           Margin="0,14,0,0"/>
+                           Foreground="{StaticResource GoBaseTextBrush}"
+                           HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding VersionText}"
-                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           Foreground="{StaticResource GoBaseMutedTextBrush}"
                            HorizontalAlignment="Center"
                            Margin="0,5,0,0"/>
                 <TextBlock Text="GoBase is the geospatial catalog behind the Geo Portal: one record per layer, with its extent, schema and provenance. This add-in lists the catalog and loads its layers into your map."
-                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           Foreground="{StaticResource GoBaseMutedTextBrush}"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
                            Margin="0,18,0,8"/>
                 <TextBlock Text="{Binding ServerText}"
                            FontSize="10.5"
-                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           Foreground="{StaticResource GoBaseMutedTextBrush}"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,16"/>
                 <Button Content="Open the Geo Portal"
                         Command="{Binding OpenPortalCommand}"
-                        Style="{StaticResource RasidPrimaryButtonStyle}"
+                        Style="{StaticResource GoBasePrimaryButtonStyle}"
                         HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding CopyrightText}"
                            FontSize="9.5"
-                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           Foreground="{StaticResource GoBaseMutedTextBrush}"
                            HorizontalAlignment="Center"
                            Margin="0,20,0,0"/>
             </StackPanel>

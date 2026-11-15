@@ -9,7 +9,7 @@ namespace GoBase.Pages.About
 	internal class AboutViewModel : PageViewModelBase
 	{
 		public string VersionText => "GoBase for ArcGIS Pro 0.1";
-		public string CopyrightText => "© 2026 RASID. All rights reserved.";
+		public string CopyrightText => "© 2026 GoBase. All rights reserved.";
 		public string ServerText => $"Connected to {ApiClient.Instance.ServerUrl}";
 		public ICommand OpenPortalCommand { get; }
 
