@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GoBase.Models;
 
@@ -39,7 +40,8 @@ namespace GoBase.Services
 			return _api.GetAsync<AssetPage>("/api/catalog/assets?" + string.Join("&", query));
 		}
 
-		public Task<FeaturePage> GetFeaturePageAsync(string assetId, GeoBox bbox, long? cursor)
+		public Task<FeaturePage> GetFeaturePageAsync(
+			string assetId, GeoBox bbox, long? cursor, CancellationToken cancellationToken = default)
 		{
 			var query = new List<string>();
 			if (bbox != null)
@@ -50,7 +52,7 @@ namespace GoBase.Services
 			var path = $"/api/map/assets/{Uri.EscapeDataString(assetId)}/data";
 			if (query.Count > 0)
 				path += "?" + string.Join("&", query);
-			return _api.GetAsync<FeaturePage>(path, FeaturePageTimeout);
+			return _api.GetAsync<FeaturePage>(path, FeaturePageTimeout, cancellationToken);
 		}
 
 		// Where a raster is in the lake, and credentials that read it for a while (an hour by default).

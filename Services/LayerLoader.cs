@@ -1,7 +1,9 @@
+using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,45 +16,57 @@ namespace GoBase.Services
 	// One GeoJSON file holding a single geometry type, and the layer it becomes.
 	internal record GeoJsonPart(string Path, string GeometryType, string LayerName);
 
+	// A feature class made from a GoBase vector asset. Its name says which asset and which geometry
+	// type it holds: gobase_<asset id, 32 hex>_<geometry type>_<UTC time>. So a layer's data source is
+	// enough for VectorViewRefresher to know what to fetch, in a project reopened tomorrow too.
+	internal record GoBaseFeatureClass(string AssetId, string GeometryType, string WorkspacePath, string Name)
+	{
+		private static readonly Regex NamePattern = new(
+			@"^gobase_([0-9a-f]{32})_(point|multipoint|polyline|polygon)_\d{17}$", RegexOptions.IgnoreCase);
+
+		public string Path => System.IO.Path.Combine(WorkspacePath, Name);
+
+		// Null for an asset id that is not a GUID: its feature class gets a plain name and is not refreshed.
+		public static string NameFor(string assetId, string geometryType) =>
+			Guid.TryParse(assetId, out var id)
+				? $"gobase_{id:N}_{geometryType.ToLowerInvariant()}_{DateTime.UtcNow:yyyyMMddHHmmssfff}"
+				: null;
+
+		// Runs on the MCT. Null for a layer that does not show a GoBase feature class.
+		public static GoBaseFeatureClass Of(FeatureLayer layer)
+		{
+			if (layer.GetDataConnection() is not CIMStandardDataConnection connection)
+				return null;
+
+			var match = NamePattern.Match(connection.Dataset ?? "");
+			var workspace = WorkspacePathOf(connection.WorkspaceConnectionString);
+			if (!match.Success || workspace == null)
+				return null;
+
+			return new GoBaseFeatureClass(
+				Guid.ParseExact(match.Groups[1].Value, "N").ToString("D"),
+				match.Groups[2].Value.ToUpperInvariant(),
+				workspace,
+				connection.Dataset);
+		}
+
+		// "DATABASE=C:\...\Project.gdb" for a file geodatabase.
+		private static string WorkspacePathOf(string connectionString)
+		{
+			const string prefix = "DATABASE=";
+			return connectionString?.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) == true
+				? connectionString.Substring(prefix.Length)
+				: null;
+		}
+	}
+
 	internal static class LayerLoader
 	{
 		private const string RootGroupName = "GoBase";
 
-		// Converts each part into a feature class in the project's default geodatabase and adds it to
-		// the active map, under a "GoBase" group. Several parts of one asset share a sub-group.
-		public static async Task LoadGeoJsonPartsAsync(IReadOnlyList<GeoJsonPart> parts, string assetName)
-		{
-			var mapView = MapView.Active;
-			if (mapView?.Map == null)
-			{
-				throw new System.InvalidOperationException(
-					"Open a map in ArcGIS Pro before loading this layer.");
-			}
-
-			var featureClasses = new List<(string Path, string LayerName)>();
-			foreach (var part in parts)
-			{
-				var featureClassPath = await ConvertGeoJsonAsync(part);
-				featureClasses.Add((featureClassPath, part.LayerName));
-			}
-
-			await QueuedTask.Run(() =>
-			{
-				var root = RootGroup(mapView.Map);
-
-				var container = featureClasses.Count > 1
-					? LayerFactory.Instance.CreateGroupLayer(root, 0, assetName)
-					: root;
-
-				foreach (var (path, layerName) in featureClasses)
-				{
-					LayerFactory.Instance.CreateLayer(
-						new System.Uri(path),
-						container,
-						layerName: layerName);
-				}
-			});
-		}
+		// Runs on the MCT.
+		public static FeatureLayer AddFeatureLayer(string featureClassPath, ILayerContainerEdit container, string layerName) =>
+			(FeatureLayer)LayerFactory.Instance.CreateLayer(new System.Uri(featureClassPath), container, layerName: layerName);
 
 		// Adds a raster to the active map, under the "GoBase" group. datasetPath points into a cloud
 		// storage connection, so Pro reads the file where it is, fetching only what is on screen.
@@ -90,13 +104,17 @@ namespace GoBase.Services
 		}
 
 		// The "GoBase" group at the top of the map, created the first time. Runs on the MCT.
-		private static GroupLayer RootGroup(Map map) =>
+		public static GroupLayer RootGroup(Map map) =>
 			map.GetLayersAsFlattenedList()
 				.OfType<GroupLayer>()
 				.FirstOrDefault(layer => layer.Name == RootGroupName)
 			?? LayerFactory.Instance.CreateGroupLayer(map, 0, RootGroupName);
 
-		private static async Task<string> ConvertGeoJsonAsync(GeoJsonPart part)
+		// The GoBase group itself, which holds the layers of several assets, not of one.
+		public static bool IsRootGroup(ILayerContainer container) =>
+			container is GroupLayer group && group.Name == RootGroupName;
+
+		public static async Task<string> ConvertGeoJsonAsync(GeoJsonPart part, string assetId)
 		{
 			var geodatabasePath = Project.Current?.DefaultGeodatabasePath;
 			if (string.IsNullOrWhiteSpace(geodatabasePath))
@@ -105,28 +123,12 @@ namespace GoBase.Services
 					"The ArcGIS Pro project does not have a default geodatabase.");
 			}
 
-			// Geodatabase names allow letters, digits and underscores, and cannot start with a digit.
-			var safeName = Regex.Replace(part.LayerName ?? "gobase_layer", @"[^A-Za-z0-9_]", "_");
-			if (string.IsNullOrWhiteSpace(safeName))
-				safeName = "gobase_layer";
-			if (char.IsDigit(safeName[0]))
-				safeName = "_" + safeName;
-
 			var outputPath = Path.Combine(
 				geodatabasePath,
-				$"{safeName}_{System.DateTime.UtcNow:yyyyMMddHHmmssfff}");
+				GoBaseFeatureClass.NameFor(assetId, part.GeometryType) ?? PlainName(part.LayerName));
 
 			// The third parameter tells JSONToFeatures which geometry type to keep from the GeoJSON.
-			var parameters = Geoprocessing.MakeValueArray(part.Path, outputPath, part.GeometryType);
-			// The CancellationToken overload: the CancelableProgressor one dereferences the progressor,
-			// so passing null there throws a NullReferenceException inside Pro.
-			var result = await Geoprocessing.ExecuteToolAsync(
-				"conversion.JSONToFeatures",
-				parameters,
-				null,
-				CancellationToken.None,
-				null,
-				GPExecuteToolFlags.None);
+			var result = await RunToolAsync("conversion.JSONToFeatures", part.Path, outputPath, part.GeometryType);
 
 			if (result == null || result.IsFailed)
 			{
@@ -137,5 +139,27 @@ namespace GoBase.Services
 
 			return outputPath;
 		}
+
+		// Geodatabase names allow letters, digits and underscores, and cannot start with a digit.
+		private static string PlainName(string layerName)
+		{
+			var safeName = Regex.Replace(layerName ?? "gobase_layer", @"[^A-Za-z0-9_]", "_");
+			if (string.IsNullOrWhiteSpace(safeName))
+				safeName = "gobase_layer";
+			if (char.IsDigit(safeName[0]))
+				safeName = "_" + safeName;
+			return $"{safeName}_{System.DateTime.UtcNow:yyyyMMddHHmmssfff}";
+		}
+
+		// The CancellationToken overload: the CancelableProgressor one dereferences the progressor,
+		// so passing null there throws a NullReferenceException inside Pro.
+		private static Task<IGPResult> RunToolAsync(string tool, params object[] values) =>
+			Geoprocessing.ExecuteToolAsync(
+				tool,
+				Geoprocessing.MakeValueArray(values),
+				null,
+				CancellationToken.None,
+				null,
+				GPExecuteToolFlags.None);
 	}
 }

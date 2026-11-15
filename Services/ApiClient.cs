@@ -58,12 +58,14 @@ namespace GoBase.Services
 			return url;
 		}
 
-		public async Task<T> GetAsync<T>(string pathAndQuery, TimeSpan? timeout = null)
+		public async Task<T> GetAsync<T>(
+			string pathAndQuery, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(ServerUrl))
 				throw new InvalidOperationException("No GoBase server is configured.");
 
-			using var cts = new CancellationTokenSource(timeout ?? Timeout);
+			using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			cts.CancelAfter(timeout ?? Timeout);
 			using var response = await _http.GetAsync(ServerUrl + pathAndQuery, cts.Token).ConfigureAwait(false);
 			await EnsureSuccessOrThrowAsync(response).ConfigureAwait(false);
 

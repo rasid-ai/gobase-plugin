@@ -19,6 +19,18 @@ namespace GoBase.Models
 			return new GeoBox(minLon, minLat, maxLon, maxLat);
 		}
 
+		// True when other lies inside this box. A tolerance of about a metre absorbs the jitter of
+		// projecting the same map view twice.
+		public bool Contains(GeoBox other)
+		{
+			const double tolerance = 1e-5;
+			return other.MinLon >= MinLon - tolerance && other.MinLat >= MinLat - tolerance
+				&& other.MaxLon <= MaxLon + tolerance && other.MaxLat <= MaxLat + tolerance;
+		}
+
+		// True when both boxes are the same view, give or take the same tolerance.
+		public bool SameAs(GeoBox other) => Contains(other) && other.Contains(this);
+
 		public static GeoBox FromArray(double[] bbox) =>
 			bbox is { Length: 4 } ? new GeoBox(bbox[0], bbox[1], bbox[2], bbox[3]) : null;
 

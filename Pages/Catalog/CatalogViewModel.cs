@@ -305,7 +305,7 @@ namespace GoBase.Pages.Catalog
                 // Only what is on screen is read. The server caps each page, and the loader caps the pages.
                 var bbox = await MapExtent.GetCurrentAsync();
                 var progress = new Progress<string>(message => RowStatus = message);
-                var result = await VectorLoader.LoadAsync(_api, Asset, bbox, progress);
+                var result = await VectorViewRefresher.AddAsync(_api, Asset, bbox, progress);
 
                 if (result.FeatureCount == 0)
                 {

@@ -18,12 +18,14 @@ namespace GoBase
 		protected override bool Initialize()
 		{
 			Services.RasterCredentialRefresher.Start();
+			Services.VectorViewRefresher.Start();
 			return base.Initialize();
 		}
 
 		protected override void Uninitialize()
 		{
 			Services.RasterCredentialRefresher.Stop();
+			Services.VectorViewRefresher.Stop();
 			base.Uninitialize();
 		}
 
